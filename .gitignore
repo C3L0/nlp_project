@@ -9,3 +9,7 @@ wheels/
 # Virtual environments
 .venv
 .venv/
+
+#
+reponses.json
+test_Quentin.ipynb
