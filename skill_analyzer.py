@@ -55,6 +55,11 @@ class SkillAnalyzer:
 
         return result
 
+    @staticmethod
+    def normalize_by_l2(vec):
+        norm = np.sqrt(sum(v**2 for v in vec.values()))
+        return {k: v / norm for k, v in vec.items()} if norm else vec
+
     def combine_scores(
         self, semantic_scores: dict, numeric_scores: dict, w_sem=0.6, w_num=0.4
     ) -> dict:
@@ -67,6 +72,9 @@ class SkillAnalyzer:
             sem = semantic_scores.get(skill, 0)
             num = numeric_scores.get(skill, 0)
             final_scores[skill] = round((w_sem * sem + w_num * num), 2)
+
+        final_scores = self.normalize_by_l2(final_scores)
+
         return final_scores
 
 

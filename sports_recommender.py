@@ -1,11 +1,12 @@
 import json
+
+import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
-import matplotlib.pyplot as plt
 
 
 class SportRecommender:
-    def __init__(self, sports_file: str = "sports.json"):
+    def __init__(self, sports_file: str = "sports_l2.json"):
         with open(sports_file, "r", encoding="utf-8") as f:
             self.sports_data = json.load(f)["sports"]
 
@@ -39,8 +40,7 @@ class SportRecommender:
             for s in user_vector
         }
         return diff
-    
-    
+
     def top_diff_skills(self, user_vector: dict, sport_name: str, n: int = 6):
         """Return the n skills with the largest absolute differences."""
         diff = self.explain(user_vector, sport_name)
@@ -50,8 +50,10 @@ class SportRecommender:
         """Return the n skills with the smallest absolute differences."""
         diff = self.explain(user_vector, sport_name)
         return dict(sorted(diff.items(), key=lambda x: abs(x[1]))[:n])
-    
-    def plot_hexagon(self, user_vector: dict, sport_name: str, skills_subset: list = None):
+
+    def plot_hexagon(
+        self, user_vector: dict, sport_name: str, skills_subset: list = None
+    ):
         """
         Display radar chart comparing user vs sport on given skills.
         If skills_subset is None, automatically use the top 6 differing skills.
@@ -75,16 +77,16 @@ class SportRecommender:
 
         fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
 
-        ax.plot(angles, user_values, linewidth=2, linestyle='solid', label='User')
+        ax.plot(angles, user_values, linewidth=2, linestyle="solid", label="User")
         ax.fill(angles, user_values, alpha=0.25)
 
-        ax.plot(angles, sport_values, linewidth=2, linestyle='dashed', label=sport_name)
+        ax.plot(angles, sport_values, linewidth=2, linestyle="dashed", label=sport_name)
         ax.fill(angles, sport_values, alpha=0.25)
 
         ax.set_xticks(angles[:-1])
         ax.set_xticklabels(skills_subset)
         ax.set_title(f"Comparison: You vs {sport_name}", size=14, pad=20)
-        ax.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1))
+        ax.legend(loc="upper right", bbox_to_anchor=(0.1, 0.1))
 
         plt.tight_layout()
         return fig

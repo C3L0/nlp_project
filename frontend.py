@@ -1,5 +1,7 @@
 import json
+
 import streamlit as st
+
 from skill_analyzer import SkillAnalyzer
 from sports_recommender import SportRecommender
 
@@ -15,9 +17,9 @@ with open("questions.json", "r", encoding="utf-8") as f:
 
 # Initialize analyzer and recommender
 analyzer = SkillAnalyzer("skill.json")
-recommender = SportRecommender("sports.json")
+recommender = SportRecommender("sports_l2.json")
 
-st.title("🏅 Sport Orientation Form")
+st.title("Sport Orientation Form")
 
 # Store answers
 answers = {}
@@ -83,21 +85,25 @@ if st.button("Analyze Results"):
     numeric_scores = analyzer.analyze_numeric(numeric_data)
 
     # Combine
-    #final_profile = analyzer.combine_scores(semantic_scores, numeric_scores)
-    st.session_state.final_profile = analyzer.combine_scores(semantic_scores, numeric_scores)
-    st.session_state.recommendations = recommender.recommend(st.session_state.final_profile, top_n=3)
+    # final_profile = analyzer.combine_scores(semantic_scores, numeric_scores)
+    st.session_state.final_profile = analyzer.combine_scores(
+        semantic_scores, numeric_scores
+    )
+    st.session_state.recommendations = recommender.recommend(
+        st.session_state.final_profile, top_n=3
+    )
 
 if st.session_state.final_profile is not None:
     final_profile = st.session_state.final_profile
 
     # Display user skill profile
-    st.write("### 🧠 Your Skill Profile")
+    st.write("### Your Skill Profile")
     st.bar_chart(final_profile)
 
     # Recommend sports
     recommendations = recommender.recommend(final_profile, top_n=3)
 
-    st.write("### 🏆 Best Sports for You")
+    st.write("### Best Sports for You")
     for sport, score in recommendations:
         st.write(f"- **{sport}** ({score})")
 
@@ -108,15 +114,17 @@ if st.session_state.final_profile is not None:
     st.write(differences)
 
     # Recommend sports
-    recommendations = recommender.recommend(final_profile, top_n=len(recommender.sports_data))
+    recommendations = recommender.recommend(
+        final_profile, top_n=len(recommender.sports_data)
+    )
 
-    st.write("### 🏆 Best Sports for You")
+    st.write("### Best Sports for You")
     top_sport, top_score = recommendations[0]
     worst_sport, worst_score = recommendations[-1]
 
-    st.write(f"- 🥇 **{top_sport}** ({top_score})")
-    st.write(f"- 🥈 **{recommendations[1][0]}** ({recommendations[1][1]})")
-    st.write(f"- 🥉 **{recommendations[2][0]}** ({recommendations[2][1]})")
+    st.write(f"- **{top_sport}** ({top_score})")
+    st.write(f"- **{recommendations[1][0]}** ({recommendations[1][1]})")
+    st.write(f"- **{recommendations[2][0]}** ({recommendations[2][1]})")
 
     st.divider()
 
@@ -138,7 +146,9 @@ if st.session_state.final_profile is not None:
 
     # Select manually the sport to compare
     sport_names = list(recommender.sports_data.keys())
-    selected_sport = st.selectbox("Choisis un sport à comparer avec ton profil :", sport_names)
+    selected_sport = st.selectbox(
+        "Choisis un sport à comparer avec ton profil :", sport_names
+    )
 
     if selected_sport:
         st.write(f"## Comparaison avec {selected_sport}")
