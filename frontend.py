@@ -1,9 +1,13 @@
 import json
-
 import streamlit as st
-
 from skill_analyzer import SkillAnalyzer
 from sports_recommender import SportRecommender
+
+# Initialisation du state
+if "final_profile" not in st.session_state:
+    st.session_state.final_profile = None
+if "recommendations" not in st.session_state:
+    st.session_state.recommendations = None
 
 # Load questions
 with open("questions.json", "r", encoding="utf-8") as f:
@@ -79,7 +83,12 @@ if st.button("Analyze Results"):
     numeric_scores = analyzer.analyze_numeric(numeric_data)
 
     # Combine
-    final_profile = analyzer.combine_scores(semantic_scores, numeric_scores)
+    #final_profile = analyzer.combine_scores(semantic_scores, numeric_scores)
+    st.session_state.final_profile = analyzer.combine_scores(semantic_scores, numeric_scores)
+    st.session_state.recommendations = recommender.recommend(st.session_state.final_profile, top_n=3)
+
+if st.session_state.final_profile is not None:
+    final_profile = st.session_state.final_profile
 
     # Display user skill profile
     st.write("### 🧠 Your Skill Profile")
@@ -97,3 +106,43 @@ if st.button("Analyze Results"):
     differences = recommender.explain(final_profile, top_sport)
     st.write(f"### Skill Difference vs {top_sport}")
     st.write(differences)
+
+    # Recommend sports
+    recommendations = recommender.recommend(final_profile, top_n=len(recommender.sports_data))
+
+    st.write("### 🏆 Best Sports for You")
+    top_sport, top_score = recommendations[0]
+    worst_sport, worst_score = recommendations[-1]
+
+    st.write(f"- 🥇 **{top_sport}** ({top_score})")
+    st.write(f"- 🥈 **{recommendations[1][0]}** ({recommendations[1][1]})")
+    st.write(f"- 🥉 **{recommendations[2][0]}** ({recommendations[2][1]})")
+
+    st.divider()
+
+    # Show differences for top sport
+    st.write(f"## Skill Differences for {top_sport}")
+
+    # Display radar for top sport
+    fig_best = recommender.plot_hexagon(final_profile, top_sport)
+    st.pyplot(fig_best)
+
+    st.divider()
+
+    # Now show the most distant sport
+    st.write(f"## Least Matching Sport: {worst_sport} ({worst_score})")
+    fig_worst = recommender.plot_hexagon(final_profile, worst_sport)
+    st.pyplot(fig_worst)
+
+    st.divider()
+
+    # Select manually the sport to compare
+    sport_names = list(recommender.sports_data.keys())
+    selected_sport = st.selectbox("Choisis un sport à comparer avec ton profil :", sport_names)
+
+    if selected_sport:
+        st.write(f"## Comparaison avec {selected_sport}")
+
+        # Affichage du graphe radar
+        fig = recommender.plot_hexagon(final_profile, selected_sport)
+        st.pyplot(fig)
