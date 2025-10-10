@@ -9,73 +9,90 @@ from sports_recommender import SportRecommender
 with open("questions.json", "r", encoding="utf-8") as f:
     questions = json.load(f)["questions"]
 
-# Initialize analyzer
+# Initialize analyzer and recommender
 analyzer = SkillAnalyzer("skill.json")
-
-open_answers = []
-numeric_data = []
+recommender = SportRecommender("sports.json")
 
 st.title("🏅 Sport Orientation Form")
 
+# Store answers
+answers = {}
+
+# Render questions dynamically
 for q in questions:
-    st.markdown(f"### {q['text']}")
+    qtype = q["type"]
 
-    # --- OPEN QUESTION ---
-    if q["type"] == "open":
-        answer = st.text_area("", key=q["id"])
-        if answer:
-            open_answers.append(answer)
+    if qtype == "open":
+        answers[q["id"]] = st.text_area(q["text"], key=q["id"])
 
-    # --- LIKERT SCALE ---
-    elif q["type"] == "likert":
-        val = st.slider(
-            "", q["scale"]["min"], q["scale"]["max"], q["scale"]["default"], key=q["id"]
-        )
-        numeric_data.append(
-            {skill: val * weight for skill, weight in q["skills"].items()}
+    elif qtype == "likert":
+        scale = q.get("scale", {"min": 1, "max": 10, "default": 5})
+        answers[q["id"]] = st.slider(
+            q["text"],
+            min_value=scale["min"],
+            max_value=scale["max"],
+            value=scale["default"],
+            key=q["id"],
         )
 
-    # --- MULTIPLE CHOICE QUESTION (MCQ) ---
-    elif q["type"] == "mcq":
-        choice = st.radio("", list(q["options"].keys()), key=q["id"])
-        numeric_data.append(q["options"][choice])
+    elif qtype == "mcq":
+        options = list(q["options"].keys())
+        answers[q["id"]] = st.radio(q["text"], options, key=q["id"])
 
-    # --- CHECKBOX QUESTION ---
-    elif q["type"] == "checkbox":
-        selections = st.multiselect("", list(q["options"].keys()), key=q["id"])
-        for s in selections:
-            numeric_data.append(q["options"][s])
+    elif qtype == "checkbox":
+        options = list(q["options"].keys())
+        answers[q["id"]] = st.multiselect(q["text"], options, key=q["id"])
 
-# Once all questions are filled
+# Process results
 if st.button("Analyze Results"):
-    # Combine open text and numeric answers
+    open_answers = []
+    numeric_data = {}
+
+    # Map answers to skills
+    for q in questions:
+        qid = q["id"]
+        qtype = q["type"]
+
+        if qtype == "open":
+            if answers[qid].strip():
+                open_answers.append(answers[qid])
+
+        elif qtype == "likert":
+            for skill, weight in q["skills"].items():
+                numeric_data[skill] = numeric_data.get(skill, 0) + answers[qid] * weight
+
+        elif qtype in ["mcq", "checkbox"]:
+            selected_options = answers[qid]
+            if isinstance(selected_options, str):
+                selected_options = [selected_options]  # mcq
+            for opt in selected_options:
+                for skill, weight in q["options"][opt].items():
+                    numeric_data[skill] = numeric_data.get(skill, 0) + weight
+
+    # Semantic analysis
     if open_answers:
         semantic_scores = analyzer.analyze_semantic(" ".join(open_answers))
     else:
         semantic_scores = {s: 0.0 for s in analyzer.skill_names}
 
+    # Numeric analysis
     numeric_scores = analyzer.analyze_numeric(numeric_data)
+
+    # Combine
     final_profile = analyzer.combine_scores(semantic_scores, numeric_scores)
 
+    # Display user skill profile
     st.write("### 🧠 Your Skill Profile")
     st.bar_chart(final_profile)
 
-    # After user answers your form
-    analyzer = SkillAnalyzer("skill.json")
-    recommender = SportRecommender("sports.json")
-
-    semantic_scores = analyzer.analyze_semantic(" ".join(open_answers))
-    numeric_scores = analyzer.analyze_numeric(numeric_data)
-    final_profile = analyzer.combine_scores(semantic_scores, numeric_scores)
-
-    # Get sport recommendations
+    # Recommend sports
     recommendations = recommender.recommend(final_profile, top_n=3)
 
     st.write("### 🏆 Best Sports for You")
     for sport, score in recommendations:
         st.write(f"- **{sport}** ({score})")
 
-    # Optional: show comparison for top sport
+    # Show skill differences for top sport
     top_sport = recommendations[0][0]
     differences = recommender.explain(final_profile, top_sport)
     st.write(f"### Skill Difference vs {top_sport}")

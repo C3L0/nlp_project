@@ -23,12 +23,10 @@ class SkillAnalyzer:
             self.skill_texts, normalize_embeddings=True
         )
 
-    # -------------------- TEXT PREPROCESSING -------------------- #
     @staticmethod
     def split_sentences(text: str):
         return [s.strip() for s in re.split(r"[.!?]+", text.strip()) if s.strip()]
 
-    # -------------------- SEMANTIC ANALYSIS -------------------- #
     def analyze_semantic(self, answer: str) -> dict:
         sentences = self.split_sentences(answer)
         if not sentences:
@@ -43,29 +41,20 @@ class SkillAnalyzer:
         skill_scores = (skill_scores / len(sentences)) * 10
         return dict(zip(self.skill_names, skill_scores.round(2)))
 
-    # -------------------- NUMERIC ANALYSIS -------------------- #
-    def analyze_numeric(self, numeric_answers: list[dict]) -> dict:
+    def analyze_numeric(self, numeric_answers: dict) -> dict:
         """
-        numeric_answers: list of dicts like:
-        [
-            {"strength": 8, "endurance": 7},
-            {"teamwork": 9},
-        ]
+        numeric_answers: dict of skill -> accumulated numeric score, e.g.:
+            {"strength": 25, "endurance": 18, "teamwork": 10}
         """
-        aggregated = {s: [] for s in self.skill_names}
+        # Ensure every skill exists in the result
+        result = {skill: 0.0 for skill in self.skill_names}
 
-        for answer in numeric_answers:
-            for skill, score in answer.items():
-                if skill in aggregated:
-                    aggregated[skill].append(score)
+        for skill, score in numeric_answers.items():
+            if skill in result:
+                result[skill] = round(float(score), 2)
 
-        # Compute averages (or zeros if empty)
-        return {
-            skill: round(np.mean(scores), 2) if scores else 0.0
-            for skill, scores in aggregated.items()
-        }
+        return result
 
-    # -------------------- COMBINE BOTH -------------------- #
     def combine_scores(
         self, semantic_scores: dict, numeric_scores: dict, w_sem=0.6, w_num=0.4
     ) -> dict:
@@ -81,22 +70,19 @@ class SkillAnalyzer:
         return final_scores
 
 
-analyzer = SkillAnalyzer("skill.json")
-
-# Semantic answer
-open_answer = "I enjoy planning strategies and staying consistent in long races."
-semantic_scores = analyzer.analyze_semantic(open_answer)
-
-# Numeric answers
-numeric_data = [
-    {"endurance": 9, "strength": 6},
-    {"strategy": 8, "teamwork": 3},
-]
-numeric_scores = analyzer.analyze_numeric(numeric_data)
-
-# Combine both
-user_profile = analyzer.combine_scores(semantic_scores, numeric_scores)
-
-print("Semantic:", semantic_scores)
-print("Numeric:", numeric_scores)
-print("Final user profile:", user_profile)
+# analyzer = SkillAnalyzer("skill.json")
+#
+# open_answer = "I enjoy planning strategies and staying consistent in long races."
+# semantic_scores = analyzer.analyze_semantic(open_answer)
+#
+# numeric_data = [
+#     {"endurance": 9, "strength": 6},
+#     {"strategy": 8, "teamwork": 3},
+# ]
+# numeric_scores = analyzer.analyze_numeric(numeric_data)
+#
+# user_profile = analyzer.combine_scores(semantic_scores, numeric_scores)
+#
+# print("Semantic:", semantic_scores)
+# print("Numeric:", numeric_scores)
+# print("Final user profile:", user_profile)

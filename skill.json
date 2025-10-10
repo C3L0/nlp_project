@@ -1,9 +1,23 @@
 {
-    "endurance": "the ability to sustain prolonged physical or mental effort",
-    "strength": "the capacity to exert force and overcome resistance",
-    "coordination": "the ability to move smoothly and efficiently",
-    "teamwork": "working effectively and cooperatively with others",
-    "strategy": "the ability to plan and make tactical decisions",
-    "precision": "accuracy and exactness in movements or decisions"
+  "endurance": "Ability to sustain physical effort over long periods.",
+  "strength": "Physical power to perform intense actions or lifts.",
+  "speed": "Quickness in performing actions or movements.",
+  "agility": "Capacity to move and change direction quickly and efficiently.",
+  "coordination": "Harmonious functioning of muscles for precise movements.",
+  "balance": "Ability to stay stable and control posture.",
+  "flexibility": "Range of motion of muscles and joints.",
+  "precision": "Accuracy in aiming, timing, or performing movements.",
+  "technique": "Quality of skill execution specific to a sport.",
+  "reflexes": "Speed of reaction to an external stimulus.",
+  "strategy": "Planning and anticipation to reach a goal effectively.",
+  "decision_making": "Choosing the best action under time or pressure constraints.",
+  "concentration": "Ability to stay focused on the task.",
+  "adaptability": "Ability to adjust tactics or behavior to new conditions.",
+  "teamwork": "Collaborating effectively with teammates.",
+  "communication": "Exchanging information clearly during action.",
+  "leadership": "Guiding or motivating others in a team context.",
+  "discipline": "Consistency and commitment to training and rules.",
+  "resilience": "Recovering from mistakes or fatigue.",
+  "confidence": "Belief in one's ability to perform successfully."
 }
 

@@ -3,49 +3,145 @@
     {
       "id": "q1",
       "type": "open",
-      "text": "Describe what you enjoy most when practicing sports."
+      "text": "What do you enjoy most when doing physical activity or sport?",
+      "skills": ["endurance", "strength", "teamwork", "strategy", "confidence"]
     },
     {
       "id": "q2",
       "type": "open",
-      "text": "How do you usually handle challenges or competition?"
+      "text": "Describe a situation where you overcame a physical or mental challenge.",
+      "skills": ["resilience", "discipline", "confidence", "concentration", "adaptability"]
     },
     {
       "id": "q3",
       "type": "likert",
-      "text": "Rate your level of endurance.",
+      "text": "How much do you enjoy long-duration efforts (like running, swimming, or cycling)?",
       "skills": { "endurance": 1.0 },
       "scale": { "min": 1, "max": 10, "default": 5 }
     },
     {
       "id": "q4",
       "type": "likert",
-      "text": "Rate your level of teamwork.",
-      "skills": { "teamwork": 1.0 },
-      "scale": { "min": 1, "max": 10, "default": 5 }
+      "text": "How important is physical strength to you?",
+      "skills": { "strength": 1.0 }
     },
     {
       "id": "q5",
-      "type": "mcq",
-      "text": "Which environment do you prefer?",
-      "options": {
-        "Team sports": { "teamwork": 1.0 },
-        "Solo activities": { "strategy": 0.7, "endurance": 0.3 },
-        "Outdoor activities": { "endurance": 0.8 },
-        "Indoor activities": { "precision": 0.8 }
-      }
+      "type": "likert",
+      "text": "How good are you at maintaining balance and body control?",
+      "skills": { "balance": 1.0, "coordination": 0.5 }
     },
     {
       "id": "q6",
-      "type": "checkbox",
-      "text": "Which qualities describe you best?",
+      "type": "mcq",
+      "text": "Which of these statements describes you best?",
       "options": {
-        "Strong physical power": { "strength": 1.0 },
-        "High precision": { "precision": 1.0 },
-        "Good coordination": { "coordination": 1.0 },
-        "Long-term focus": { "strategy": 1.0 },
-        "Team spirit": { "teamwork": 1.0 }
+        "I like individual performance and focus": { "concentration": 1, "discipline": 0.5 },
+        "I like teamwork and communication": { "teamwork": 1, "communication": 0.5 },
+        "I like strategy and planning": { "strategy": 1, "decision_making": 0.5 },
+        "I like to push my limits physically": { "strength": 0.5, "resilience": 1 }
       }
+    },
+    {
+      "id": "q7",
+      "type": "likert",
+      "text": "How much do you enjoy solving problems or creating strategies during play?",
+      "skills": { "strategy": 1.0, "decision_making": 0.5 }
+    },
+    {
+      "id": "q8",
+      "type": "likert",
+      "text": "How much do you enjoy precise movements or control (like aiming or targeting)?",
+      "skills": { "precision": 1.0, "technique": 0.5 }
+    },
+    {
+      "id": "q9",
+      "type": "checkbox",
+      "text": "Which aspects of sport do you find most satisfying?",
+      "options": {
+        "Team collaboration": { "teamwork": 1, "communication": 0.5 },
+        "Self-improvement": { "discipline": 1, "confidence": 0.5 },
+        "Adrenaline and intensity": { "speed": 1, "reflexes": 0.5 },
+        "Creativity and expression": { "adaptability": 1, "technique": 0.5 },
+        "Tactics and planning": { "strategy": 1, "decision_making": 0.5 }
+      }
+    },
+    {
+      "id": "q10",
+      "type": "likert",
+      "text": "How good are your reflexes and reaction times?",
+      "skills": { "reflexes": 1.0, "speed": 0.5 }
+    },
+    {
+      "id": "q11",
+      "type": "likert",
+      "text": "How flexible do you consider yourself (physically)?",
+      "skills": { "flexibility": 1.0 }
+    },
+    {
+      "id": "q12",
+      "type": "likert",
+      "text": "How do you handle unexpected changes during play or competition?",
+      "skills": { "adaptability": 1.0, "resilience": 0.5 }
+    },
+    {
+      "id": "q13",
+      "type": "mcq",
+      "text": "When training or playing, what motivates you most?",
+      "options": {
+        "Becoming technically better": { "technique": 1 },
+        "Winning or competing": { "confidence": 1, "resilience": 0.5 },
+        "Having fun with others": { "teamwork": 1, "communication": 0.5 },
+        "Achieving long-term goals": { "discipline": 1, "endurance": 0.5 }
+      }
+    },
+    {
+      "id": "q14",
+      "type": "likert",
+      "text": "How often do you take initiative or lead in a team setting?",
+      "skills": { "leadership": 1.0, "communication": 0.5 }
+    },
+    {
+      "id": "q15",
+      "type": "open",
+      "text": "If you could describe your ideal sport in a few words, what would it involve?",
+      "skills": ["endurance", "strength", "strategy", "precision", "teamwork", "adaptability"]
+    },
+    {
+      "id": "q16",
+      "type": "likert",
+      "text": "How focused can you stay on one task for long periods?",
+      "skills": { "concentration": 1.0 }
+    },
+    {
+      "id": "q17",
+      "type": "checkbox",
+      "text": "Which words best describe your mindset in sports?",
+      "options": {
+        "Calm and precise": { "concentration": 1, "precision": 0.5 },
+        "Aggressive and powerful": { "strength": 1, "speed": 0.5 },
+        "Strategic and patient": { "strategy": 1, "discipline": 0.5 },
+        "Creative and flexible": { "adaptability": 1, "technique": 0.5 },
+        "Supportive and social": { "teamwork": 1, "communication": 0.5 }
+      }
+    },
+    {
+      "id": "q18",
+      "type": "likert",
+      "text": "How comfortable are you in high-pressure or competitive environments?",
+      "skills": { "confidence": 1.0, "resilience": 0.5 }
+    },
+    {
+      "id": "q19",
+      "type": "open",
+      "text": "Describe a situation where you had to work closely with others to reach a goal.",
+      "skills": ["teamwork", "communication", "leadership"]
+    },
+    {
+      "id": "q20",
+      "type": "likert",
+      "text": "How important is discipline in your approach to training or practice?",
+      "skills": { "discipline": 1.0 }
     }
   ]
 }
