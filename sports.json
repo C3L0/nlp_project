@@ -1,0 +1,10 @@
+{
+  "sports": {
+    "Running":      { "endurance": 10, "strength": 4, "teamwork": 2, "strategy": 3, "precision": 1 },
+    "Football":     { "endurance": 7,  "strength": 7, "teamwork": 9, "strategy": 8, "precision": 3 },
+    "Archery":      { "endurance": 3,  "strength": 2, "teamwork": 1, "strategy": 5, "precision": 10 },
+    "Boxing":       { "endurance": 7,  "strength": 9, "teamwork": 2, "strategy": 5, "precision": 2 },
+    "Cycling":      { "endurance": 10, "strength": 6, "teamwork": 3, "strategy": 7, "precision": 2 }
+  }
+}
+
