@@ -1,5 +1,4 @@
 import json
-
 import streamlit as st
 
 from skill_analyzer import SkillAnalyzer
@@ -85,7 +84,6 @@ if st.button("Analyze Results"):
     numeric_scores = analyzer.analyze_numeric(numeric_data)
 
     # Combine
-    # final_profile = analyzer.combine_scores(semantic_scores, numeric_scores)
     st.session_state.final_profile = analyzer.combine_scores(
         semantic_scores, numeric_scores
     )
@@ -102,10 +100,15 @@ if st.session_state.final_profile is not None:
 
     # Recommend sports
     recommendations = recommender.recommend(final_profile, top_n=3)
-
+    
+    # Best sports
     st.write("### Best Sports for You")
-    for sport, score in recommendations:
-        st.write(f"- **{sport}** ({score})")
+    top_sport, top_score = recommendations[0]
+    worst_sport, worst_score = recommendations[-1]
+
+    st.write(f"- **{top_sport}** ({top_score})")
+    st.write(f"- **{recommendations[1][0]}** ({recommendations[1][1]})")
+    st.write(f"- **{recommendations[2][0]}** ({recommendations[2][1]})")
 
     # Show skill differences for top sport
     top_sport = recommendations[0][0]
@@ -117,14 +120,6 @@ if st.session_state.final_profile is not None:
     recommendations = recommender.recommend(
         final_profile, top_n=len(recommender.sports_data)
     )
-
-    st.write("### Best Sports for You")
-    top_sport, top_score = recommendations[0]
-    worst_sport, worst_score = recommendations[-1]
-
-    st.write(f"- **{top_sport}** ({top_score})")
-    st.write(f"- **{recommendations[1][0]}** ({recommendations[1][1]})")
-    st.write(f"- **{recommendations[2][0]}** ({recommendations[2][1]})")
 
     st.divider()
 
